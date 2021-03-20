@@ -33,20 +33,8 @@ margin: 3px 3px 0px 0px;
 /* border-bottom: 2px #999 solid; */
 }
 .field{
-    color: #05cd52;
-    width: 150px;
+    width: 200px;
     padding : 2px;
     margin:-10px;
     
-}
-.box{
-    display: flex;
-    
-}
-.fileField{
-    margin: 30px;
-    margin-left: 0px;
-}
-.fileinput{
-    padding-top: 0px;
 }

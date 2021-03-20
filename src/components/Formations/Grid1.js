@@ -6,15 +6,15 @@ import { AiOutlineSend } from "react-icons/ai";
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
+import { makeStyles } from '@material-ui/core/styles';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
-
+import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
-import "./Formation.css"
-function Formation(props) {
+function Grid1(props) {
 
     const initialFieldValues = {
         Nom: '',
@@ -157,39 +157,53 @@ function Formation(props) {
 
     }
 
-
     function handleFormSubmit(e) {
         e.preventDefault();
         // var { name, value } = e.target
         console.log(Values);
         props.addOrEdit(Values)
-        setValues(initialFieldValues)
     }
     const onTagsChange = (event, values) => {
         setValues({
-            ...Values,
             Tags: values
+        }, () => {
+            console.log(values);
         });
     }
+    const useStyles = makeStyles((theme) => ({
+        root: {
+            flexGrow: 1,
+        },
+        paper: {
+            padding: theme.spacing(2),
+            textAlign: 'center',
+            color: 'white',
+            backgroundColor: 'blue',
+        },
+    }));
+    // justify="space-evenly"
+    // alignItems="center">
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const classes = useStyles();
     return (
-        <div >
+        <div className={classes.root}>
             <form autoComplete='off'>
 
-                <Grid container spacing={2} direction='column' alignItems="center" justify="space-evenly">
+                <Grid container spacing={2} direction='column' xs={12} alignItems="center" justify="space-evenly">
                     <fieldset>
                         <legend>Informations Publication</legend>
                         <Grid item container spacing={2} justify="space-evenly" alignItems="center" >
-                            <Grid item container spacing={0} justify="space-evenly"  >
+                            <Grid item container spacing={0} xs={12} justify="space-evenly"  >
                                 <Grid item xs={3} >
-                                    <label>Nom de publication : </label>
+                                    <label for="Nom">Nom de publication : </label>
                                 </Grid>
                                 <Grid item xs={7}>
-                                    <TextField label="Nom" value={Values.Nom} name="Nom" className="field" onChange={handleInputChange} />
+                                    <TextField label="Nom" name="Nom" className="field" value={Values.Nom} onChange={handleInputChange} />
                                 </Grid>
                             </Grid>
-                            <Grid item container spacing={0} justify="space-evenly" >
+                            <Grid item container spacing={0} xs={12} justify="space-evenly" >
                                 <Grid item xs={3} >
-                                    <label>Domaine publication : </label>
+                                    <label for="Domaine">Domaine publication : </label>
                                 </Grid>
                                 <Grid item xs={7}>
                                     <FormControl className="field">
@@ -197,8 +211,8 @@ function Formation(props) {
                                         <Select
                                             labelId="demo-simple-select-helper-label"
                                             name="Domaine"
-                                            color='primary'
                                             value={Values.Domaine}
+                                            color='primary'
                                             onChange={handleInputChange}
                                         >
                                             <MenuItem value="">
@@ -214,26 +228,27 @@ function Formation(props) {
                                     </FormControl>
                                 </Grid>
                             </Grid>
-                            <Grid item container spacing={0} justify="space-evenly" >
+                            <Grid item container spacing={0} xs={12} justify="space-evenly" >
                                 <Grid item xs={3} >
-                                    <label>Type de  publication: </label>
+                                    <label for="Type">Type de  publication: </label>
                                 </Grid>
                                 <Grid item xs={7}>
                                     <RadioGroup aria-label="gender" name="Type" value={Values.Type} onChange={handleInputChange}>
                                         <div className="radio" >
-                                            <FormControlLabel value="Hard" control={<Radio color="primary" />} label="Hard" className="radioitem" labelPlacement="end" />
-                                            <FormControlLabel value="Soft" control={<Radio color="primary" />} label="Soft" className="radioitem" labelPlacement="end" />
+                                            <FormControlLabel value="Travail" control={<Radio color="primary" />} label="Travail" className="radioitem" labelPlacement="end" />
+                                            <FormControlLabel value="Stage" control={<Radio color="primary" />} label="Stage" className="radioitem" labelPlacement="end" />
                                         </div>
                                     </RadioGroup>
                                 </Grid>
                             </Grid>
-                            <Grid item container spacing={0} justify="space-evenly" >
+                            <Grid item container spacing={0} xs={12} justify="space-evenly" >
                                 <Grid item xs={3} >
-                                    <label>Importer une image:</label>
+                                    <label for="Image">Importer une image:</label>
                                 </Grid>
                                 <Grid item xs={7}>
                                     <TextField
                                         focused
+                                        outlined
                                         name="Image"
                                         type="file"
                                         label="image"
@@ -248,48 +263,47 @@ function Formation(props) {
                     </fieldset>
                     <fieldset>
                         <legend>Formation</legend>
-                        <Grid item container spacing={2} justify="space-evenly">
+                        <Grid item container spacing={2} xs={12} justify="space-evenly">
 
                             <Grid item container xs={12} justify="space-evenly" >
                                 <Grid item xs={4} >
-                                    <label>Le durée de la formation :   </label>
+                                    <label for="Duree">Le durée de la formation :   </label>
                                 </Grid>
                                 <Grid item xs={7}>
-                                    <TextField label="Durée" name="Duree" className="field" value={Values.Duree} type="number" onChange={handleInputChange} />
-                                </Grid>
-                            </Grid>
-                            <Grid item container justify="space-evenly" >
-                                <Grid item xs={4} >
-                                    <label >Le nombre des places :  </label>
-                                </Grid>
-                                <Grid item xs={7}>
-                                    <TextField label="Nombre des places" value={Values.NbPlaces} name="NbPlaces" className="field" type="number" onChange={handleInputChange} />
+                                    <TextField label="Durée" name="Duree" className="field" type="number" value={Values.Duree} onChange={handleInputChange} />
                                 </Grid>
                             </Grid>
                             <Grid item container xs={12} justify="space-evenly" >
                                 <Grid item xs={4} >
-                                    <label >Quel est la date de debut<br /> de la formation: </label>
+                                    <label for="NbPlaces">Le nombre des places :  </label>
                                 </Grid>
                                 <Grid item xs={7}>
-                                    <TextField name="DateDebut" label="date" value={Values.DateDebut} className="field" type="date" onChange={handleInputChange} focused style={{ "marginTop": '0px' }} />
+                                    <TextField label="Nombre des places" name="NbPlaces" className="field" type="number" value={Values.NbPlaces} onChange={handleInputChange} />
                                 </Grid>
                             </Grid>
-                            <Grid item container justify="space-evenly" >
+                            <Grid item container xs={12} justify="space-evenly" >
                                 <Grid item xs={4} >
-                                    <label >Le prix:</label>
+                                    <label for="DateDebut">Quel est la date de debut<br /> de la formation: </label>
                                 </Grid>
                                 <Grid item xs={7}>
-                                    <TextField label="Prix" name="Prix" value={Values.Prix} className="field" type="number" onChange={handleInputChange} />
+                                    <TextField name="DateDebut" label="date" className="field" type="date" value={Values.DateDebut} onChange={handleInputChange} focused style={{ "marginTop": '0px' }} />
                                 </Grid>
                             </Grid>
-                            <Grid item container justify="space-evenly" >
+                            <Grid item container xs={12} justify="space-evenly" >
                                 <Grid item xs={4} >
-                                    <label >Ajoutez des Tags pour <br />améliorer l'indexation <br />de la recherche de votre <br />publication:</label>
+                                    <label for="Prix">Le prix:</label>
+                                </Grid>
+                                <Grid item xs={7}>
+                                    <TextField label="Prix" name="Prix" className="field" type="number" value={Values.Prix} onChange={handleInputChange} />
+                                </Grid>
+                            </Grid>
+                            <Grid item container xs={12} justify="space-evenly" >
+                                <Grid item xs={4} >
+                                    <label for="Tags">Ajoutez des Tags pour <br />améliorer l'indexation <br />de la recherche de votre <br />publication:</label>
                                 </Grid>
                                 <Grid item xs={7}>
                                     <div className="autocomplete" style={{ "marginTop": '23px' }}>
                                         <Autocomplete
-
                                             multiple
                                             limitTags={2}
                                             id="multiple-limit-tags"
@@ -306,26 +320,23 @@ function Formation(props) {
                                             )}
 
                                         />
-                                        <TextField label="Ajoutez des Tags spécifiques" name="others" className="field" type="text" style={{ "marginTop": '12px' }} onChange={handleInputChange} />
-                                    </div>
-                                </Grid>
+                                        <TextField label="Ajoutez des Tags spécifiques" name="others" className="field3" type="text" style={{ "marginTop": '12px' }} value={Values.others} onChange={handleInputChange} />
+                                    </div>                                </Grid>
                             </Grid>
-                            <Grid item container justify="space-evenly" alignItems="center" >
+                            <Grid item container xs={12} justify="space-evenly" alignItems="center" >
                                 <Grid item xs={4} >
-                                    <Button variant="contained" color="primary" style={{ 'marginTop': '50px' }} type="submit" onClick={handleFormSubmit}>
+                                    <Button variant="contained" color="primary" style={{ 'marginTop': '50px'}} type="submit" onClick={handleFormSubmit}>
                                         Postuler  <AiOutlineSend fontSize="large" className='icon' />
                                     </Button>                                </Grid>
-
+                                
                             </Grid>
                         </Grid>
                     </fieldset>
                 </Grid>
             </form>
-            <fieldset>
-                <h1>Liste Des Formations</h1>
-            </fieldset>
         </div>
+
     )
 }
 
-export default Formation
+export default Grid1

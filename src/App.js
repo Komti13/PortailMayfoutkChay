@@ -3,7 +3,7 @@ import logo from './logo.svg';
 import Formation from "./components/Formations/Formation"
 import Emploi from './components/Emploi/Emploi';
 import firebaseDb from "./firebase";
-import Grid from './components/Formations/Grid'
+import Grid from './components/Formations/Grid1'
 function App() {
   const addOrEdit = obj => {
     firebaseDb.child('Formations').push(
@@ -18,8 +18,8 @@ function App() {
   return (
     <div>
       {/* <Emploi></Emploi> */}
-      {/* <Formation addOrEdit={addOrEdit}></Formation> */}
-      <Grid></Grid>
+      <Formation addOrEdit={addOrEdit}></Formation>
+      {/* <Grid></Grid> */}
     </div>
   );
 }
