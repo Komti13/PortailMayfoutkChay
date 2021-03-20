@@ -1,26 +1,3 @@
-
-.field2{
-    width: 200px;
-    color: rgb(75, 17, 141);
-}
-.field3{
-    width: 270px;
-    color: rgb(75, 17, 141);
-}
-.fielddate{
-   color: rgb(75, 17, 141);     
-      width: 200px;
-      margin-top:40px;
-}
-.icon{
-    margin-left: 5px;
-}
-.fieldformation{
-    width: 70%;
-}
-.autocomplete{
-    width: 41em;
-}
 body, p, legend, label, input {
 font:  Roboto, sans-serif;}
 /* Forms -----------------------------------------------------------
@@ -31,9 +8,9 @@ padding: 10px;
 border: 3px #531eb4 solid;
 margin: 10px;
 width: 650px;
-padding: 50px;
+padding: 20px;
 margin-left: auto;
-    margin-right: auto;
+margin-right: auto;
 }
 legend {
 font-weight: bold;
@@ -42,7 +19,7 @@ color: #531eb4;
 form label {
 float: left;
 width: 350px;
-margin: 3px 0px 10px 0px;
+margin: 3px 0px 10px 80px;
 padding-top: 25px;
 }
 form input {
@@ -55,21 +32,15 @@ form TextField {
 margin: 3px 3px 0px 0px;
 /* border-bottom: 2px #999 solid; */
 }
-.field{
+/* .field{
     color: #05cd52;
-    width: 150px;
+    width: 200px;
     padding : 2px;
-    margin:-10px;
+    margin:-5px;
     
-}
+} */
 .box{
     display: flex;
-    
-}
-.fileField{
-    margin: 30px;
-    margin-left: 0px;
-}
-.fileinput{
-    padding-top: 0px;
+    width: 650px;
+    justify-content: center;
 }

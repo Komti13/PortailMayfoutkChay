@@ -13,17 +13,18 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import "./Formation.css"
-function Formation() {
+function Formation(props) {
 
     const initialFieldValues = {
         Nom: '',
         Domaine: '',
-        Type: 'Travail',
+        Type: '',
         Image: '',
         Duree: '',
         NbPlaces: '',
         DateDebut: '',
         Prix: '',
+        others: '',
         Tags: {}
 
     }
@@ -140,12 +141,21 @@ function Formation() {
     });
     const handleInputChange = e => {
         var { name, value } = e.target
-        setValues({
-            ...Values,
-            [name]: value
-        })
-       
+        if (e.target === 'DateDebut') {
+            setValues({
+                ...Values,
+                [name]: value.toString()
+            })
+        }
+
+        else
+            setValues({
+                ...Values,
+                [name]: value
+            })
+
     }
+   
     // const handleChange = (e) => {
     //     setValues({
     //         ...Values,
@@ -160,31 +170,43 @@ function Formation() {
     //         Domaine: e.target.value
     //     });
     // };
+    function handleFormSubmit(e) {
+        e.preventDefault();
+        // var { name, value } = e.target
+        console.log(Values);
+        props.addOrEdit(Values)
+    }
+    const onTagsChange = (event, values) => {
+        setValues({
+            Tags: values
+        }, () => {
+            console.log(values);
+        });
+    }
+    // const useStyles = makeStyles((theme) => ({
+    //     formControl: {
+    //         margin: theme.spacing(1),
+    //         minWidth: 120,
+    //     },
+    //     selectEmpty: {
+    //         marginTop: theme.spacing(2),
+    //     },
+    // }));
 
-    const useStyles = makeStyles((theme) => ({
-        formControl: {
-            margin: theme.spacing(1),
-            minWidth: 120,
-        },
-        selectEmpty: {
-            marginTop: theme.spacing(2),
-        },
-    }));
-
-    const classes = useStyles();
+    // const classes = useStyles();
 
     return (
-        <div>
+        <div >
             <form autoComplete='off'>
                 <fieldset>
                     <legend>Informations Publication</legend>
                     <div className="box">
                         <label for="Nom">Nom de publication : </label>
-                        <TextField outlined label="Nom" name="Nom" className="field" value={Values.Nom} onChange={handleInputChange} />
+                        <TextField label="Nom" name="Nom" className="field" value={Values.Nom} onChange={handleInputChange} />
                     </div>
                     <div className="box">
                         <label for="Domaine">Domaine publication : </label>
-                        <FormControl className={classes.formControl}>
+                        <FormControl className="field">
                             <InputLabel id="demo-simple-select-helper-label">Domaine</InputLabel>
                             <Select
                                 labelId="demo-simple-select-helper-label"
@@ -232,47 +254,48 @@ function Formation() {
                     </div>
 
                 </fieldset>
-                <fieldset className="fieldformation">
+                <fieldset style={{ 'width': '750px' }}>
                     <legend>Formation</legend>
                     <div className="box">
                         <label for="Duree">Le durée de la formation :   </label>
-                        <TextField outlined label="Durée" name="Duree" className="field2" type="number" value={Values.Duree} onChange={handleInputChange} />
+                        <TextField label="Durée" name="Duree" className="field" type="number" value={Values.Duree} onChange={handleInputChange} />
                     </div>
                     <div className="box">
                         <label for="NbPlaces">Le nombre des places :  </label>
-                        <TextField outlined label="Nombre des places" name="NbPlaces" className="field2" type="text" value={Values.NbPlaces} onChange={handleInputChange} />
+                        <TextField label="Nombre des places" name="NbPlaces" className="field" type="number" value={Values.NbPlaces} onChange={handleInputChange} />
                     </div>
                     <div className="box">
                         <label for="DateDebut">Quel est la date de debut de la formation: </label>
-                        <TextField outlined name="DateDebut" label="date" className="fielddate" type="date" value={Values.DateDebut} onChange={handleInputChange} focused style={{ "marginTop": '0px' }} />
+                        <TextField name="DateDebut" label="date" className="field" type="date" value={Values.DateDebut} onChange={handleInputChange} focused style={{ "marginTop": '0px' }} />
                     </div>
                     <div className="box">
                         <label for="Prix">Le prix:</label>
-                        <TextField outlined label="Prix" name="Prix" className="field2" type="number" value={Values.Prix} onChange={handleInputChange} />
+                        <TextField label="Prix" name="Prix" className="field" type="number" value={Values.Prix} onChange={handleInputChange} />
                     </div>
                     <div className="box">
-                        <label for="index">Ajoutez des Tags pour améliorer l'indexation<br /> de la recherche de votre publication:</label>
+                        <label for="Tags">Ajoutez des Tags pour améliorer l'indexation de la recherche de votre publication:</label>
                         <div className="autocomplete" style={{ "marginTop": '23px' }}>
                             <Autocomplete
                                 multiple
                                 limitTags={2}
                                 id="multiple-limit-tags"
+                                name="Tags"
                                 options={top100Films}
-                                onChange={handleInputChange}
+                                onChange={onTagsChange}
+                                // eslint-disable-next-line react/jsx-no-duplicate-props
                                 options={options.sort((a, b) => -b.firstLetter.localeCompare(a.firstLetter))}
                                 groupBy={(option) => option.firstLetter}
                                 getOptionLabel={(option) => option.title}
                                 defaultValue={[top100Films[13], top100Films[12]]}
                                 renderInput={(params) => (
-                                    <TextField {...params} variant="outlined" label="Tags" placeholder="Ajouter Tags" />
+                                    <TextField {...params} label="Tags" placeholder="Ajouter Tags" style={{ "width": '400px' }} />
                                 )}
 
                             />
-
+                            <TextField label="Ajoutez des Tags spécifiques" name="others" className="field3" type="text" style={{ "marginTop": '12px' }} value={Values.others} onChange={handleInputChange} />
                         </div>
-                        {/* <TextField outlined label="séparez les indexes par des espaces" name="index" className="field3" type="text" style={{"marginTop":'12px'}}/> */}
                     </div>
-                    <Button variant="contained" color="primary" style={{ 'marginLeft': '350px', 'marginTop': '50px', 'width': '150px' }} type="submit">
+                    <Button variant="contained" color="primary" style={{ 'marginLeft': '350px', 'marginTop': '50px', 'width': '150px' }} type="submit" onClick={handleFormSubmit}>
                         Postuler  <AiOutlineSend fontSize="large" className='icon' />
                     </Button>
                 </fieldset>
