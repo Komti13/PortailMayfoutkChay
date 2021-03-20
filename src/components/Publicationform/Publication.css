@@ -1,0 +1,52 @@
+body, p, legend, label, input {
+font:  Roboto, sans-serif;}
+/* Forms -----------------------------------------------------------
+---------------------------- */
+
+fieldset {
+padding: 10px;
+border: 3px #531eb4 solid;
+margin: 10px;
+width: 650px;
+padding: 50px;
+margin-left: auto;
+    margin-right: auto;
+}
+legend {
+font-weight: bold;
+color: #531eb4;
+}
+form label {
+float: left;
+width: 350px;
+margin: 3px 0px 10px 0px;
+padding-top: 25px;
+}
+form input {
+    /* border: none; */
+margin: 3px 3px 0px 0px;
+/* border-bottom: 2px #999 solid; */
+}
+form TextField {
+    /* border: none; */
+margin: 3px 3px 0px 0px;
+/* border-bottom: 2px #999 solid; */
+}
+.field{
+    color: #05cd52;
+    width: 150px;
+    padding : 2px;
+    margin:-10px;
+    
+}
+.box{
+    display: flex;
+    
+}
+.fileField{
+    margin: 30px;
+    margin-left: 0px;
+}
+.fileinput{
+    padding-top: 0px;
+}
