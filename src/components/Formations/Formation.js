@@ -153,7 +153,7 @@ function Formation(props) {
         { title: '3 Idiots', year: 2009 },
         { title: 'Monty Python and the Holy Grail', year: 1975 },
     ];
-  
+
     const options = top100Films.map((option) => {
         const firstLetter = option.title[0].toUpperCase();
         return {
@@ -181,7 +181,6 @@ function Formation(props) {
 
     function handleFormSubmit(e) {
         e.preventDefault();
-        // var { name, value } = e.target
         console.log(Values);
         props.addOrEdit(Values)
         setValues(initialFieldValues)
@@ -199,7 +198,10 @@ function Formation(props) {
                 setFormations({
                     ...snapshot.val()
                 })
-            }
+            } else
+                setFormations({
+                    
+                })
         })
 
     }, [])
@@ -211,13 +213,27 @@ function Formation(props) {
 
         } else
             setValues({
-                ...Formations
+                ...Formations[CurrentId]
             })
-    }, [CurrentId, Formations])
+        // console.log(Formations.Domaine)
+    }, [CurrentId])
+    const OnDelete = id => {
+        
+        if (window.confirm("etes vous sure de supprimer ce item?")) {
+            firebaseDb.child(`Formations/${id}`).remove(
+                err => {
+                    if (err)
+                        console.log(err)
+                    else
+                        setCurrentID('')
+                }
+            )
+        }
+    }
     return (
         <div >
             <form autoComplete='off'>
-
+                
                 <Grid container spacing={2} direction='column' alignItems="center" justify="space-evenly">
                     <fieldset>
                         <legend>Informations Publication</legend>
@@ -487,14 +503,14 @@ function Formation(props) {
                                 </Grid>
 
                                 <Grid item container xs={1} justify="space-evenly">
-                                    <Grid item  spacing={2} container>
+                                    <Grid item spacing={2} container>
                                         <Grid item xs={6} >
-                                            <button onClick={()=>{setCurrentID(id)}}> <EditIcon style={{ 'color': 'blue' }}></EditIcon></button>
+                                            <button onClick={() => { setCurrentID(id) }}> <EditIcon style={{ 'color': 'blue' }}></EditIcon></button>
                                         </Grid>
                                         <Grid item xs={6} >
-                                            <button><DeleteIcon style={{ 'color': 'red' }}></DeleteIcon></button>
+                                            <button onClick={() => { OnDelete(id) }}><DeleteIcon style={{ 'color': 'red' }}></DeleteIcon></button>
                                         </Grid>
-                                      
+
 
                                     </Grid>
                                 </Grid>

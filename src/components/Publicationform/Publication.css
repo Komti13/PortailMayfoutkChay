@@ -1,7 +1,4 @@
-body, p, legend, label, input {
-font:  Roboto, sans-serif;}
-/* Forms -----------------------------------------------------------
----------------------------- */
+
 
 fieldset {
 padding: 10px;
@@ -23,18 +20,14 @@ margin: 3px 0px 10px 0px;
 padding-top: 25px;
 }
 form input {
-    /* border: none; */
 margin: 3px 3px 0px 0px;
-/* border-bottom: 2px #999 solid; */
 }
 form TextField {
-    /* border: none; */
 margin: 3px 3px 0px 0px;
-/* border-bottom: 2px #999 solid; */
 }
 .field{
     width: 200px;
     padding : 2px;
     margin:-10px;
     
-}
+} 

@@ -18,7 +18,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import { makeStyles } from '@material-ui/core/styles';
 import EditIcon from '@material-ui/icons/Edit';
 import "../Formations/Formation.css"
-function Emploi(props) {
+function Test(props) {
     const useStyles = makeStyles((theme) => ({
         root: {
             flexGrow: 1,
@@ -201,7 +201,7 @@ function Emploi(props) {
                 })
             }
             else setOffres({
-
+                
             })
         })
 
@@ -410,7 +410,7 @@ function Emploi(props) {
                 </Grid>
             </form>
             <fieldset style={{ "width": '100%', 'padding': '10px', 'border': '1px black' }}>
-                <h1>Liste Des Offres de stages et d'emploi</h1>
+                <h1>Liste Des Formations</h1>
                 <Grid container direction='row' spacing={1} alignItems="center" justify="space-evenly" style={{ "backgroundColor": 'red', 'color': 'white' }}>
 
                     <Grid item container xs={1} justify="space-evenly" alignItems="center" >
@@ -451,7 +451,7 @@ function Emploi(props) {
                     <Grid item container xs={1} justify="space-evenly">
                         <Grid item xs={12} >
                             <h3 >Image</h3>
-                        </Grid>
+                        </Grid> 
                     </Grid>
 
                     <Grid item container xs={2} >
@@ -555,4 +555,4 @@ function Emploi(props) {
     )
 }
 
-export default Emploi
+export default Test
