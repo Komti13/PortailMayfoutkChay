@@ -11,11 +11,31 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
-
+import firebaseDb from "../../firebase";
 import Grid from '@material-ui/core/Grid';
+import GridList from '@material-ui/core/GridList';
+import DeleteIcon from '@material-ui/icons/Delete';
+import { makeStyles } from '@material-ui/core/styles';
+import EditIcon from '@material-ui/icons/Edit';
 import "./Formation.css"
 function Formation(props) {
-
+    const useStyles = makeStyles((theme) => ({
+        root: {
+            flexGrow: 1,
+        },
+        h3: {
+            padding: theme.spacing(2),
+            textAlign: 'center',
+            color: 'white',
+            backgroundColor: 'red'
+        },
+        gridList: {
+            flexWrap: 'nowrap',
+            // Promote the list into his own layer on Chrome. This cost memory but helps keeping high FPS.
+            transform: 'translateZ(0)',
+        },
+    }));
+    const classes = useStyles();
     const initialFieldValues = {
         Nom: '',
         Domaine: '',
@@ -30,7 +50,7 @@ function Formation(props) {
 
     }
     const [Values, setValues] = useState(initialFieldValues)
-
+    var [CurrentId, setCurrentID] = useState('')
     const top100Films = [
         { title: 'The Shawshank Redemption', year: 1994 },
         { title: 'The Godfather', year: 1972 },
@@ -133,6 +153,7 @@ function Formation(props) {
         { title: '3 Idiots', year: 2009 },
         { title: 'Monty Python and the Holy Grail', year: 1975 },
     ];
+  
     const options = top100Films.map((option) => {
         const firstLetter = option.title[0].toUpperCase();
         return {
@@ -171,6 +192,28 @@ function Formation(props) {
             Tags: values
         });
     }
+    const [Formations, setFormations] = useState({});
+    useEffect(() => {
+        firebaseDb.child('Formations').on('value', snapshot => {
+            if (snapshot.val() != null) {
+                setFormations({
+                    ...snapshot.val()
+                })
+            }
+        })
+
+    }, [])
+    useEffect(() => {
+        if (CurrentId === '') {
+            setValues({
+                ...initialFieldValues
+            })
+
+        } else
+            setValues({
+                ...Formations
+            })
+    }, [CurrentId, Formations])
     return (
         <div >
             <form autoComplete='off'>
@@ -314,15 +357,155 @@ function Formation(props) {
                                 <Grid item xs={4} >
                                     <Button variant="contained" color="primary" style={{ 'marginTop': '50px' }} type="submit" onClick={handleFormSubmit}>
                                         Postuler  <AiOutlineSend fontSize="large" className='icon' />
-                                    </Button>                                </Grid>
+                                    </Button>
+                                </Grid>
 
                             </Grid>
                         </Grid>
                     </fieldset>
                 </Grid>
             </form>
-            <fieldset>
+            <fieldset style={{ "width": '100%', 'padding': '10px', 'border': '1px black' }}>
                 <h1>Liste Des Formations</h1>
+                <Grid container direction='row' spacing={1} alignItems="center" justify="space-evenly" style={{ "backgroundColor": 'red', 'color': 'white' }}>
+
+                    <Grid item container xs={1} justify="space-evenly" alignItems="center" >
+                        <Grid item xs={12} >
+                            <h3  >Nom</h3>
+                        </Grid>
+                    </Grid>
+                    <Grid item container xs={1} justify="space-evenly">
+                        <Grid item xs={12}>
+                            <h3 >Domaine</h3>
+                        </Grid>
+                    </Grid>
+                    <Grid item container xs={1} justify="space-evenly">
+                        <Grid item xs={12} >
+                            <h3 >Type</h3>
+                        </Grid>
+                    </Grid>
+                    <Grid item container xs={1} justify="space-evenly">
+                        <Grid item xs={12} >
+                            <h3 >Date Debut</h3>
+                        </Grid>
+                    </Grid>
+                    <Grid item container xs={1} justify="space-evenly">
+                        <Grid item xs={12} >
+                            <h3 >Durée</h3>
+                        </Grid>
+                    </Grid>
+                    <Grid item container xs={1} justify="space-evenly">
+                        <Grid item xs={12} >
+                            <h3 >Prix</h3>
+                        </Grid>
+                    </Grid>
+                    <Grid item container xs={1} justify="space-evenly">
+                        <Grid item xs={12} >
+                            <h3 style={{ 'padding': '0px' }}>Places disponibles</h3>
+                        </Grid>
+                    </Grid>
+                    <Grid item container xs={1} justify="space-evenly">
+                        <Grid item xs={12} >
+                            <h3 >Image</h3>
+                        </Grid>
+                    </Grid>
+
+                    <Grid item container xs={2} >
+                        <Grid item xs={12} >
+                            <h3 style={{ "textAlign": "center" }}>Tags</h3>
+                        </Grid>
+                    </Grid>
+
+                    <Grid item container xs={1} justify="space-evenly">
+                        <Grid item xs={12} >
+                            <h3 >Actions</h3>
+                        </Grid>
+                    </Grid>
+                </Grid>
+                {/* <Grid container direction='row' alignItems="center" justify="sp</Grid>ace-evenly"> */}
+                {
+                    Object.keys(Formations).map(id => {
+                        return (
+                            <Grid container direction='row' spacing={1} alignItems="center" justify="space-evenly" style={{ "marginTop": '10px' }}>
+
+                                <Grid item container xs={1} justify="space-evenly" alignItems="center" >
+                                    <Grid item xs={12} >
+                                        <h4 >{Formations[id].Nom}</h4>
+                                    </Grid>
+                                </Grid>
+                                <Grid item container xs={1} justify="space-evenly">
+                                    <Grid item xs={12}>
+                                        <h4 >{Formations[id].Domaine}</h4>
+                                    </Grid>
+                                </Grid>
+                                <Grid item container xs={1} justify="space-evenly">
+                                    <Grid item xs={12} >
+                                        <h4 >{Formations[id].Type}</h4>
+                                    </Grid>
+                                </Grid>
+                                <Grid item container xs={1} justify="space-evenly">
+                                    <Grid item xs={12} >
+                                        <h4 >{Formations[id].DateDebut}</h4>
+                                    </Grid>
+                                </Grid>
+                                <Grid item container xs={1} justify="space-evenly">
+                                    <Grid item xs={12} >
+                                        <h4 >{Formations[id].Duree}</h4>
+                                    </Grid>
+                                </Grid>
+                                <Grid item container xs={1} justify="space-evenly">
+                                    <Grid item xs={12} >
+                                        <h4 >{Formations[id].Prix}</h4>
+                                    </Grid>
+                                </Grid>
+                                <Grid item container xs={1} justify="space-evenly">
+                                    <Grid item xs={12} >
+                                        <h4 >{Formations[id].NbPlaces}</h4>
+                                    </Grid>
+                                </Grid>
+                                <Grid item container xs={1} justify="space-evenly">
+                                    <Grid item xs={12} >
+                                        <GridList className={classes.gridList} cols={1} cellHeight={30}>
+                                            <h4 >{Formations[id].Image}</h4>
+                                        </GridList>
+                                    </Grid>
+                                </Grid>
+
+                                <Grid item container xs={2} justify="space-evenly" >
+
+                                    <Grid item container direction='column' xs={12}>
+                                        <GridList cellHeight={30} cols={1}>
+                                            {Formations[id].Tags.map(num => {
+                                                return (
+                                                    <Grid item xs={12}>
+                                                        <h4 style={{ "textAlign": "center" }}>{num.title}</h4>
+                                                    </Grid>
+                                                )
+                                            })}
+                                        </GridList>
+                                    </Grid>
+                                </Grid>
+
+                                <Grid item container xs={1} justify="space-evenly">
+                                    <Grid item  spacing={2} container>
+                                        <Grid item xs={6} >
+                                            <button onClick={()=>{setCurrentID(id)}}> <EditIcon style={{ 'color': 'blue' }}></EditIcon></button>
+                                        </Grid>
+                                        <Grid item xs={6} >
+                                            <button><DeleteIcon style={{ 'color': 'red' }}></DeleteIcon></button>
+                                        </Grid>
+                                      
+
+                                    </Grid>
+                                </Grid>
+                            </Grid>
+
+                        )
+
+
+                    })
+                }
+                {/* </Grid> */}
             </fieldset>
         </div>
     )
