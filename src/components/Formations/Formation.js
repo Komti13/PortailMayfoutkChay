@@ -141,7 +141,7 @@ function Formation(props) {
     const initialFieldValues = {
         Nom: '',
         Domaine: '',
-        Type: '',
+        Type: 'Hard',
         Image: '',
         Duree: '',
         NbPlaces: '',
@@ -289,7 +289,7 @@ function Formation(props) {
     }
     return (
         <div >
-            <form autoComplete='off'>
+            <form autoComplete='off' onSubmit={e=>handleFormSubmit(e)} >
 
                 <Grid container spacing={2} direction='column' alignItems="center" justify="space-evenly">
                     <fieldset>
@@ -350,6 +350,7 @@ function Formation(props) {
                                 </Grid>
                                 <Grid item xs={7}>
                                     <TextField
+                                        required
                                         focused
                                         name="Image"
                                         type="file"
@@ -372,7 +373,7 @@ function Formation(props) {
                                     <label>Le durée de la formation :   </label>
                                 </Grid>
                                 <Grid item xs={7}>
-                                    <TextField label="Durée" name="Duree" className="field" value={Values.Duree} type="number" onChange={handleInputChange} />
+                                    <TextField required label="Durée" name="Duree" className="field" value={Values.Duree} type="number" onChange={handleInputChange} />
                                 </Grid>
                             </Grid>
                             <Grid item container justify="space-evenly" >
@@ -380,7 +381,7 @@ function Formation(props) {
                                     <label >Le nombre des places :  </label>
                                 </Grid>
                                 <Grid item xs={7}>
-                                    <TextField label="Nombre des places" value={Values.NbPlaces} name="NbPlaces" className="field" type="number" onChange={handleInputChange} />
+                                    <TextField required label="Nombre des places" value={Values.NbPlaces} name="NbPlaces" className="field" type="number" onChange={handleInputChange} />
                                 </Grid>
                             </Grid>
                             <Grid item container xs={12} justify="space-evenly" >
@@ -388,7 +389,7 @@ function Formation(props) {
                                     <label >Quel est la date de debut<br /> de la formation: </label>
                                 </Grid>
                                 <Grid item xs={7}>
-                                    <TextField name="DateDebut" label="date" value={Values.DateDebut} className="field" type="date" onChange={handleInputChange} focused style={{ "marginTop": '0px' }} />
+                                    <TextField required name="DateDebut" label="date" value={Values.DateDebut} className="field" type="date" onChange={handleInputChange} focused style={{ "marginTop": '0px' }} />
                                 </Grid>
                             </Grid>
                             <Grid item container justify="space-evenly" >
@@ -396,7 +397,7 @@ function Formation(props) {
                                     <label >Le prix:</label>
                                 </Grid>
                                 <Grid item xs={7}>
-                                    <TextField label="Prix" name="Prix" value={Values.Prix} className="field" type="number" onChange={handleInputChange} />
+                                    <TextField required label="Prix" name="Prix" value={Values.Prix} className="field" type="number" onChange={handleInputChange} />
                                 </Grid>
                             </Grid>
                             <Grid item container justify="space-evenly" >
@@ -406,6 +407,7 @@ function Formation(props) {
                                 <Grid item xs={7}>
                                     <div className="autocomplete" style={{ "marginTop": '23px' }}>
                                         <Autocomplete
+                                            required
                                             multiple
                                             limitTags={2}
                                             id="multiple-limit-tags"
@@ -418,7 +420,7 @@ function Formation(props) {
                                             getOptionLabel={(option) => option.title}
                                             value={Object.values(Values.Tags)}
                                             renderInput={(params) => (
-                                                <TextField {...params} label="Tags" placeholder="Ajouter Tags" style={{ "width": '400px' }} />
+                                                <TextField required {...params} label="Tags" placeholder="Ajouter Tags" style={{ "width": '400px' }} />
                                             )}
 
                                         />
@@ -428,7 +430,7 @@ function Formation(props) {
                             </Grid>
                             <Grid item container justify="space-evenly" alignItems="center" >
                                 <Grid item xs={4} >
-                                    <Button variant="contained" color="primary" style={{ 'marginTop': '50px' }} type="submit" onClick={handleFormSubmit} value='Postuler' title="Postuler" >
+                                    <Button variant="contained" color="primary" style={{ 'marginTop': '50px' }} type="submit" value='Postuler' title="Postuler" >
                                         {btnValue} <AiOutlineSend fontSize="large" className='icon' style={{ 'marginLeft': '10px' }} />
                                     </Button>
                                 </Grid>
