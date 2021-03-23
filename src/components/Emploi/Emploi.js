@@ -141,12 +141,12 @@ function Emploi(props) {
     const initialFieldValues = {
         Nom: '',
         Domaine: '',
-        Type: '',
+        Type: 'Hard',
         Image: '',
         Experience: '',
         Contrat: '',
         DateDebut: '',
-        TypeTravail: '',
+        TypeTravail: 'Complet',
         others: '',
         Tags: {
             val1: top100Films[13],
@@ -155,7 +155,7 @@ function Emploi(props) {
 
     }
     const [Values, setValues] = useState(initialFieldValues)
-  
+
 
     const options = top100Films.map((option) => {
         const firstLetter = option.title[0].toUpperCase();
@@ -226,23 +226,23 @@ function Emploi(props) {
 
     useEffect(() => {
         firebaseDb.child('OffresEmploi').on('value', snapshot => {
-            
+
             if (snapshot.val() != null) {
                 setOffres({
                     ...snapshot.val()
                 })
-                
+
             }
             else setOffres({
 
             })
-            
+
         })
         // console.log(Offres)
-    
+
 
     }, [])
-    
+
     // useEffect(() => {
     //     if (CurrentId === '') {
     //         setValues({
@@ -297,7 +297,7 @@ function Emploi(props) {
     }
     return (
         <div >
-            <form autoComplete='off'>
+            <form autoComplete='off' onSubmit={e => handleFormSubmit(e)} >
 
                 <Grid container spacing={2} direction='column' alignItems="center" justify="space-evenly">
                     <fieldset>
@@ -308,7 +308,7 @@ function Emploi(props) {
                                     <label>Nom de publication : </label>
                                 </Grid>
                                 <Grid item xs={7}>
-                                    <TextField label="Nom" value={Values.Nom} name="Nom" className="field" onChange={handleInputChange} />
+                                    <TextField required label="Nom" value={Values.Nom} name="Nom" className="field" onChange={handleInputChange} />
                                 </Grid>
                             </Grid>
                             <Grid item container spacing={0} justify="space-evenly" >
@@ -316,7 +316,7 @@ function Emploi(props) {
                                     <label>Domaine publication : </label>
                                 </Grid>
                                 <Grid item xs={7}>
-                                    <FormControl className="field">
+                                    <FormControl required className="field">
                                         <InputLabel id="demo-simple-select-helper-label">Domaine</InputLabel>
                                         <Select
                                             labelId="demo-simple-select-helper-label"
@@ -357,6 +357,7 @@ function Emploi(props) {
                                 </Grid>
                                 <Grid item xs={7}>
                                     <TextField
+                                        required
                                         focused
                                         name="Image"
                                         type="file"
@@ -380,7 +381,7 @@ function Emploi(props) {
                                 </Grid>
                                 <Grid item xs={7}>
 
-                                    <TextField label="exp" name="Experience" className="field" value={Values.Experience} type="number" onChange={handleInputChange} />
+                                    <TextField required label="exp" name="Experience" className="field" value={Values.Experience} type="number" onChange={handleInputChange} />
                                 </Grid>
                             </Grid>
                             <Grid item container xs={12} justify="space-evenly" >
@@ -388,7 +389,7 @@ function Emploi(props) {
                                     <label >La date de debut : </label>
                                 </Grid>
                                 <Grid item xs={7}>
-                                    <TextField name="DateDebut" label="date" value={Values.DateDebut} className="field" type="date" onChange={handleInputChange} focused style={{ "marginTop": '0px' }} />
+                                    <TextField required name="DateDebut" label="date" value={Values.DateDebut} className="field" type="date" onChange={handleInputChange} focused style={{ "marginTop": '0px' }} />
                                 </Grid>
                             </Grid>
                             <Grid item container justify="space-evenly" >
@@ -397,7 +398,7 @@ function Emploi(props) {
 
                                 </Grid>
                                 <Grid item xs={7}>
-                                    <FormControl className={classes.formControl}>
+                                    <FormControl required className={classes.formControl}>
                                         <InputLabel id="demo-simple-select-helper-label">Contrat</InputLabel>
                                         <Select
                                             labelId="demo-simple-select-helper-label"
@@ -453,7 +454,7 @@ function Emploi(props) {
                                             getOptionLabel={(option) => option.title}
                                             value={Object.values(Values.Tags)}
                                             renderInput={(params) => (
-                                                <TextField {...params} label="Tags" placeholder="Ajouter Tags" style={{ "width": '400px' }} />
+                                                <TextField required={Object.values(Values.Tags).length === 0} {...params} label="Tags" placeholder="Ajouter Tags" style={{ "width": '400px' }} />
                                             )}
 
                                         />
@@ -463,7 +464,7 @@ function Emploi(props) {
                             </Grid>
                             <Grid item container justify="space-evenly" alignItems="center" >
                                 <Grid item xs={4} >
-                                    <Button variant="contained" color="primary" style={{ 'marginTop': '50px' }} type="submit" onClick={handleFormSubmit}>
+                                    <Button variant="contained" color="primary" style={{ 'marginTop': '50px' }} type="submit" >
                                         {btnValue}  <AiOutlineSend fontSize="large" className='icon' style={{ 'marginLeft': '10px' }} />
                                     </Button>
                                 </Grid>
@@ -583,10 +584,10 @@ function Emploi(props) {
 
                                     <Grid item container direction='column' xs={12}>
                                         <GridList cellHeight={30} cols={1}>
-                                          
-                                            { Offres[id].Tags.map(num => {
+
+                                            {Offres[id].Tags.map(num => {
                                                 return (
-                                                    <Grid item xs={12}>
+                                                    <Grid item xs={12} key={num.id}>
                                                         <h4 style={{ "textAlign": "center" }}>{num.title}</h4>
                                                     </Grid>
                                                 )
@@ -604,7 +605,7 @@ function Emploi(props) {
                                                 variant="outlined"
                                                 color='default'
                                                 className={classes.button2}
-                                                startIcon={<EditIcon  />}
+                                                startIcon={<EditIcon />}
                                             >
 
                                             </Button>
@@ -616,11 +617,11 @@ function Emploi(props) {
                                                 variant="outlined"
                                                 color="secondary"
                                                 className={classes.button}
-                                                style={{  'fontSize': '30px' }}
+                                                style={{ 'fontSize': '30px' }}
                                                 startIcon={<DeleteIcon />}
                                             >
-                                                
-                                         </Button>
+
+                                            </Button>
                                         </Grid>
 
 

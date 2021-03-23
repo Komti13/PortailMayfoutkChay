@@ -249,7 +249,9 @@ function Formation(props) {
     //         })
     //     console.log(Formations.Domaine)
     // }, [CurrentId])
+
     const [btnValue, setbtnValue] = useState("Postuler")
+
 
     const OnUpdate = (id) => {
         console.log(Formations[id].Type)
@@ -289,7 +291,7 @@ function Formation(props) {
     }
     return (
         <div >
-            <form autoComplete='off' onSubmit={e=>handleFormSubmit(e)} >
+            <form autoComplete='off' onSubmit={e => handleFormSubmit(e)} >
 
                 <Grid container spacing={2} direction='column' alignItems="center" justify="space-evenly">
                     <fieldset>
@@ -407,7 +409,7 @@ function Formation(props) {
                                 <Grid item xs={7}>
                                     <div className="autocomplete" style={{ "marginTop": '23px' }}>
                                         <Autocomplete
-                                            required
+
                                             multiple
                                             limitTags={2}
                                             id="multiple-limit-tags"
@@ -420,7 +422,7 @@ function Formation(props) {
                                             getOptionLabel={(option) => option.title}
                                             value={Object.values(Values.Tags)}
                                             renderInput={(params) => (
-                                                <TextField required {...params} label="Tags" placeholder="Ajouter Tags" style={{ "width": '400px' }} />
+                                                <TextField {...params} required={Object.values(Values.Tags).length === 0} label="Tags" placeholder="Ajouter Tags" style={{ "width": '400px' }} />
                                             )}
 
                                         />
@@ -501,7 +503,7 @@ function Formation(props) {
                 {
                     Object.keys(Formations).map(id => {
                         return (
-                            <Grid container direction='row' spacing={1} alignItems="center" justify="space-evenly" style={{ "marginTop": '10px' }} key={id}>
+                            <Grid key={id} container direction='row' spacing={1} alignItems="center" justify="space-evenly" style={{ "marginTop": '10px' }} key={id}>
 
                                 <Grid item container xs={1} justify="space-evenly" alignItems="center" >
                                     <Grid item xs={12} >
@@ -552,7 +554,7 @@ function Formation(props) {
                                         <GridList cellHeight={30} cols={1}>
                                             {Formations[id].Tags.map(num => {
                                                 return (
-                                                    <Grid item xs={12}>
+                                                    <Grid item xs={12} key={num.id}>
                                                         <h4 style={{ "textAlign": "center" }}>{num.title}</h4>
                                                     </Grid>
                                                 )
