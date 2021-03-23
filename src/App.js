@@ -8,31 +8,13 @@ import Grid from './components/Formations/Grid1'
 import Test from './components/Emploi/Test'
 function App() {
  
-  const addOrEdit = obj => {
-    firebaseDb.child('Formations').push(
-      obj,
-      err => {
-        if (err) {
-          console.log(err)
-        }
-      }
-      )
-  }
-  const addOrEditemploi = obj => {
-    firebaseDb.child('OffresEmploi').push(
-      obj,
-      err => {
-        if (err) {
-          console.log(err)
-        }
-      }
-    )
-  }
+ 
   return (
     <div>
       {/* <Test ></Test> */}
-      <Emploi addOrEdit={addOrEditemploi}></Emploi>
+      {/* <Emploi></Emploi> */}
       {/* <Formation addOrEdit={addOrEdit}></Formation> */}
+      <Formation ></Formation>
       {/* <Grid></Grid> */}
     </div>
   );

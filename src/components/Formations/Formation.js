@@ -36,21 +36,6 @@ function Formation(props) {
         },
     }));
     const classes = useStyles();
-    const initialFieldValues = {
-        Nom: '',
-        Domaine: '',
-        Type: '',
-        Image: '',
-        Duree: '',
-        NbPlaces: '',
-        DateDebut: '',
-        Prix: '',
-        others: '',
-        Tags: {}
-
-    }
-    const [Values, setValues] = useState(initialFieldValues)
-    var [CurrentId, setCurrentID] = useState('')
     const top100Films = [
         { title: 'The Shawshank Redemption', year: 1994 },
         { title: 'The Godfather', year: 1972 },
@@ -153,6 +138,25 @@ function Formation(props) {
         { title: '3 Idiots', year: 2009 },
         { title: 'Monty Python and the Holy Grail', year: 1975 },
     ];
+    const initialFieldValues = {
+        Nom: '',
+        Domaine: '',
+        Type: '',
+        Image: '',
+        Duree: '',
+        NbPlaces: '',
+        DateDebut: '',
+        Prix: '',
+        others: '',
+        Tags: {
+            val1: top100Films[13],
+            val2: top100Films[12]
+        }
+
+    }
+    const [Values, setValues] = useState(initialFieldValues)
+    // var [CurrentId, setCurrentID] = useState('')
+
 
     const options = top100Films.map((option) => {
         const firstLetter = option.title[0].toUpperCase();
@@ -178,11 +182,37 @@ function Formation(props) {
 
     }
 
+    const [FormId, setFormId] = useState('')
+    const addOrEdit = obj => {
+        if (FormId === '') {
+            firebaseDb.child('Formations').push(
+                obj,
+                err => {
+                    if (err) {
+                        console.log(err)
+                    } else {
+                        setFormId('')
+                    }
+                }
+            )
+        } else {
+            firebaseDb.child(`Formations/${FormId}`).set(
+                obj,
+                err => {
+                    if (err) {
+                        console.log(err)
+                    } else {
+                        setFormId('')
+                    }
+                }
 
+            )
+        }
+    }
     function handleFormSubmit(e) {
         e.preventDefault();
         console.log(Values);
-        props.addOrEdit(Values)
+        addOrEdit(Values)
         setValues(initialFieldValues)
     }
     const onTagsChange = (event, values) => {
@@ -200,32 +230,59 @@ function Formation(props) {
                 })
             } else
                 setFormations({
-                    
+
                 })
         })
+        // console.log(.tags)
 
     }, [])
-    useEffect(() => {
-        if (CurrentId === '') {
-            setValues({
-                ...initialFieldValues
-            })
 
-        } else
-            setValues({
-                ...Formations[CurrentId]
-            })
-        // console.log(Formations.Domaine)
-    }, [CurrentId])
+    // useEffect(() => {
+    // if (CurrentId === '') {
+    //     setValues({
+    //         ...initialFieldValues
+    //     })
+
+    //     // } else    
+    //         setValues({
+    //             ...Formations[CurrentId]
+    //         })
+    //     console.log(Formations.Domaine)
+    // }, [CurrentId])
+    const [btnValue, setbtnValue] = useState("Postuler")
+
+    const OnUpdate = (id) => {
+        console.log(Formations[id].Type)
+        setFormId(id)
+        setbtnValue("Editer")
+        // console.log(Values.Tags)
+
+        setValues({
+
+            Nom: Formations[id].Nom,
+            Domaine: Formations[id].Domaine,
+            Type: Formations[id].Type,
+            // Image: Formations[id].Image,
+            Duree: Formations[id].Duree,
+            NbPlaces: Formations[id].NbPlaces,
+            DateDebut: Formations[id].DateDebut,
+            Prix: Formations[id].Prix,
+            others: Formations[id].others,
+            Tags: Object.assign({}, Formations[id].Tags)
+
+        })
+        console.log(Values.Tags)
+
+    }
     const OnDelete = id => {
-        
+
         if (window.confirm("etes vous sure de supprimer ce item?")) {
             firebaseDb.child(`Formations/${id}`).remove(
                 err => {
                     if (err)
                         console.log(err)
                     else
-                        setCurrentID('')
+                        setFormId('')
                 }
             )
         }
@@ -233,7 +290,7 @@ function Formation(props) {
     return (
         <div >
             <form autoComplete='off'>
-                
+
                 <Grid container spacing={2} direction='column' alignItems="center" justify="space-evenly">
                     <fieldset>
                         <legend>Informations Publication</legend>
@@ -243,7 +300,7 @@ function Formation(props) {
                                     <label>Nom de publication : </label>
                                 </Grid>
                                 <Grid item xs={7}>
-                                    <TextField label="Nom" value={Values.Nom} name="Nom" className="field" onChange={handleInputChange} />
+                                    <TextField required label="Nom" value={Values.Nom} name="Nom" className="field" onChange={handleInputChange} />
                                 </Grid>
                             </Grid>
                             <Grid item container spacing={0} justify="space-evenly" >
@@ -251,9 +308,10 @@ function Formation(props) {
                                     <label>Domaine publication : </label>
                                 </Grid>
                                 <Grid item xs={7}>
-                                    <FormControl className="field">
+                                    <FormControl required className="field">
                                         <InputLabel id="demo-simple-select-helper-label">Domaine</InputLabel>
                                         <Select
+
                                             labelId="demo-simple-select-helper-label"
                                             name="Domaine"
                                             color='primary'
@@ -296,7 +354,7 @@ function Formation(props) {
                                         name="Image"
                                         type="file"
                                         label="image"
-                                        value={Values.Image}
+                                        // value={Values.Image}
                                         onChange={handleInputChange}
                                     />
 
@@ -348,7 +406,6 @@ function Formation(props) {
                                 <Grid item xs={7}>
                                     <div className="autocomplete" style={{ "marginTop": '23px' }}>
                                         <Autocomplete
-
                                             multiple
                                             limitTags={2}
                                             id="multiple-limit-tags"
@@ -359,20 +416,20 @@ function Formation(props) {
                                             options={options.sort((a, b) => -b.firstLetter.localeCompare(a.firstLetter))}
                                             groupBy={(option) => option.firstLetter}
                                             getOptionLabel={(option) => option.title}
-                                            defaultValue={[top100Films[13], top100Films[12]]}
+                                            value={Object.values(Values.Tags)}
                                             renderInput={(params) => (
                                                 <TextField {...params} label="Tags" placeholder="Ajouter Tags" style={{ "width": '400px' }} />
                                             )}
 
                                         />
-                                        <TextField label="Ajoutez des Tags spécifiques" name="others" className="field" type="text" style={{ "marginTop": '12px' }} onChange={handleInputChange} />
+                                        <TextField label="Ajoutez des Tags spécifiques" name="others" value={Values.others} className="field" type="text" style={{ "marginTop": '12px' }} onChange={handleInputChange} />
                                     </div>
                                 </Grid>
                             </Grid>
                             <Grid item container justify="space-evenly" alignItems="center" >
                                 <Grid item xs={4} >
-                                    <Button variant="contained" color="primary" style={{ 'marginTop': '50px' }} type="submit" onClick={handleFormSubmit}>
-                                        Postuler  <AiOutlineSend fontSize="large" className='icon' />
+                                    <Button variant="contained" color="primary" style={{ 'marginTop': '50px' }} type="submit" onClick={handleFormSubmit} value='Postuler' title="Postuler" >
+                                        {btnValue} <AiOutlineSend fontSize="large" className='icon' style={{ 'marginLeft': '10px' }} />
                                     </Button>
                                 </Grid>
 
@@ -442,7 +499,7 @@ function Formation(props) {
                 {
                     Object.keys(Formations).map(id => {
                         return (
-                            <Grid container direction='row' spacing={1} alignItems="center" justify="space-evenly" style={{ "marginTop": '10px' }}>
+                            <Grid container direction='row' spacing={1} alignItems="center" justify="space-evenly" style={{ "marginTop": '10px' }} key={id}>
 
                                 <Grid item container xs={1} justify="space-evenly" alignItems="center" >
                                     <Grid item xs={12} >
@@ -502,13 +559,33 @@ function Formation(props) {
                                     </Grid>
                                 </Grid>
 
-                                <Grid item container xs={1} justify="space-evenly">
+                                <Grid item container xs={1} justify="space-evenly" alignItems="center">
                                     <Grid item spacing={2} container>
-                                        <Grid item xs={6} >
-                                            <button onClick={() => { setCurrentID(id) }}> <EditIcon style={{ 'color': 'blue' }}></EditIcon></button>
+                                        <Grid item>
+                                            <Button
+                                                onClick={() => { OnUpdate(id) }}
+                                                size='large'
+                                                variant="outlined"
+                                                color='default'
+                                                className={classes.button2}
+                                                startIcon={<EditIcon />}
+                                            >
+
+                                            </Button>
                                         </Grid>
-                                        <Grid item xs={6} >
-                                            <button onClick={() => { OnDelete(id) }}><DeleteIcon style={{ 'color': 'red' }}></DeleteIcon></button>
+                                        <Grid item >
+                                            <Button
+                                                onClick={() => { OnDelete(id) }}
+                                                size='large'
+                                                variant="outlined"
+                                                color="secondary"
+                                                className={classes.button}
+                                                style={{ 'fontSize': '30px' }}
+                                                startIcon={<DeleteIcon />}
+                                            // style={{ 'color': 'red'  }}
+                                            >
+
+                                            </Button>
                                         </Grid>
 
 

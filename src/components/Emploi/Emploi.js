@@ -36,21 +36,6 @@ function Emploi(props) {
         },
     }));
     const classes = useStyles();
-    const initialFieldValues = {
-        Nom: '',
-        Domaine: '',
-        Type: '',
-        Image: '',
-        Experience: '',
-        Contrat: '',
-        DateDebut: '',
-        TypeTravail: '',
-        others: '',
-        Tags: {}
-
-    }
-    const [Values, setValues] = useState(initialFieldValues)
-    var [CurrentId, setCurrentID] = useState('')
     const top100Films = [
         { title: 'The Shawshank Redemption', year: 1994 },
         { title: 'The Godfather', year: 1972 },
@@ -153,6 +138,24 @@ function Emploi(props) {
         { title: '3 Idiots', year: 2009 },
         { title: 'Monty Python and the Holy Grail', year: 1975 },
     ];
+    const initialFieldValues = {
+        Nom: '',
+        Domaine: '',
+        Type: '',
+        Image: '',
+        Experience: '',
+        Contrat: '',
+        DateDebut: '',
+        TypeTravail: '',
+        others: '',
+        Tags: {
+            val1: top100Films[13],
+            val2: top100Films[12]
+        }
+
+    }
+    const [Values, setValues] = useState(initialFieldValues)
+  
 
     const options = top100Films.map((option) => {
         const firstLetter = option.title[0].toUpperCase();
@@ -178,11 +181,39 @@ function Emploi(props) {
 
     }
 
+    const [OffrId, setOffrId] = useState('')
 
+    const addOrEditemploi = obj => {
+        if (OffrId === '') {
+            firebaseDb.child('OffresEmploi').push(
+                obj,
+                err => {
+                    if (err) {
+                        console.log(err)
+                    } else {
+                        setOffrId('')
+                    }
+                }
+            )
+        } else {
+            firebaseDb.child(`OffresEmploi/${OffrId}`).set(
+                obj,
+                err => {
+                    if (err) {
+                        console.log(err)
+                    }
+                    else {
+                        setOffrId('')
+                    }
+                }
+            )
+        }
+
+    }
     function handleFormSubmit(e) {
         e.preventDefault();
         console.log(Values);
-        props.addOrEdit(Values)
+        addOrEditemploi(Values)
         setValues(initialFieldValues)
     }
     const onTagsChange = (event, values) => {
@@ -195,17 +226,23 @@ function Emploi(props) {
 
     useEffect(() => {
         firebaseDb.child('OffresEmploi').on('value', snapshot => {
+            
             if (snapshot.val() != null) {
                 setOffres({
                     ...snapshot.val()
                 })
+                
             }
             else setOffres({
 
             })
+            
         })
+        // console.log(Offres)
+    
 
     }, [])
+    
     // useEffect(() => {
     //     if (CurrentId === '') {
     //         setValues({
@@ -226,10 +263,37 @@ function Emploi(props) {
                     if (err)
                         console.log(err)
                     else
-                        setCurrentID('')
+                        setOffrId('')
                 }
             )
+            setOffres({
+
+            })
         }
+    }
+    const [btnValue, setbtnValue] = useState("Postuler")
+
+    const OnUpdateEmploi = id => {
+        console.log(Offres[id].Type)
+        setOffrId(id)
+        setbtnValue("Editer")
+        // Offres[id].Tags.map(num=>console.log(num.title))
+        console.log(Offres[id].Tags[0].title)
+        setValues({
+            ...Values,
+            Nom: Offres[id].Nom,
+            Domaine: Offres[id].Domaine,
+            Type: Offres[id].Type,
+            // Image: Formations[id].Image,
+            Experience: Offres[id].Experience,
+            Contrat: Offres[id].Contrat,
+            DateDebut: Offres[id].DateDebut,
+            TypeTravail: Offres[id].TypeTravail,
+            others: Offres[id].others,
+            Tags: Object.assign({}, Offres[id].Tags)
+
+        })
+
     }
     return (
         <div >
@@ -387,20 +451,20 @@ function Emploi(props) {
                                             options={options.sort((a, b) => -b.firstLetter.localeCompare(a.firstLetter))}
                                             groupBy={(option) => option.firstLetter}
                                             getOptionLabel={(option) => option.title}
-                                            defaultValue={[top100Films[13], top100Films[12]]}
+                                            value={Object.values(Values.Tags)}
                                             renderInput={(params) => (
                                                 <TextField {...params} label="Tags" placeholder="Ajouter Tags" style={{ "width": '400px' }} />
                                             )}
 
                                         />
-                                        <TextField label="Ajoutez des Tags spécifiques" name="others" className="field" type="text" style={{ "marginTop": '12px' }} onChange={handleInputChange} />
+                                        <TextField label="Ajoutez des Tags spécifiques" value={Values.others} name="others" className="field" type="text" style={{ "marginTop": '12px' }} onChange={handleInputChange} />
                                     </div>
                                 </Grid>
                             </Grid>
                             <Grid item container justify="space-evenly" alignItems="center" >
                                 <Grid item xs={4} >
                                     <Button variant="contained" color="primary" style={{ 'marginTop': '50px' }} type="submit" onClick={handleFormSubmit}>
-                                        Postuler  <AiOutlineSend fontSize="large" className='icon' />
+                                        {btnValue}  <AiOutlineSend fontSize="large" className='icon' style={{ 'marginLeft': '10px' }} />
                                     </Button>
                                 </Grid>
 
@@ -470,7 +534,7 @@ function Emploi(props) {
                 {
                     Object.keys(Offres).map(id => {
                         return (
-                            <Grid container direction='row' spacing={1} alignItems="center" justify="space-evenly" style={{ "marginTop": '10px' }}>
+                            <Grid key={id} container direction='row' spacing={1} alignItems="center" justify="space-evenly" style={{ "marginTop": '10px' }}>
 
                                 <Grid item container xs={1} justify="space-evenly" alignItems="center" >
                                     <Grid item xs={12} >
@@ -519,7 +583,8 @@ function Emploi(props) {
 
                                     <Grid item container direction='column' xs={12}>
                                         <GridList cellHeight={30} cols={1}>
-                                            {Offres[id].Tags.map(num => {
+                                          
+                                            { Offres[id].Tags.map(num => {
                                                 return (
                                                     <Grid item xs={12}>
                                                         <h4 style={{ "textAlign": "center" }}>{num.title}</h4>
@@ -531,12 +596,31 @@ function Emploi(props) {
                                 </Grid>
 
                                 <Grid item container xs={1} justify="space-evenly">
-                                    <Grid item spacing={2} container>
-                                        <Grid item xs={6} >
-                                            <button onClick={() => { setCurrentID(id) }}> <EditIcon style={{ 'color': 'blue' }}></EditIcon></button>
+                                    <Grid item spacing={1} container justify="space-evenly" alignItems="center">
+                                        <Grid item  >
+                                            <Button
+                                                onClick={() => { OnUpdateEmploi(id) }}
+                                                size='large'
+                                                variant="outlined"
+                                                color='default'
+                                                className={classes.button2}
+                                                startIcon={<EditIcon  />}
+                                            >
+
+                                            </Button>
                                         </Grid>
-                                        <Grid item xs={6} >
-                                            <button onClick={() => { OnDelete(id) }}><DeleteIcon style={{ 'color': 'red' }}></DeleteIcon></button>
+                                        <Grid item  >
+                                            <Button
+                                                onClick={() => { OnDelete(id) }}
+                                                size='large'
+                                                variant="outlined"
+                                                color="secondary"
+                                                className={classes.button}
+                                                style={{  'fontSize': '30px' }}
+                                                startIcon={<DeleteIcon />}
+                                            >
+                                                
+                                         </Button>
                                         </Grid>
 
 
