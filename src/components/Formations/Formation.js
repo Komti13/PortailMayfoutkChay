@@ -37,7 +37,7 @@ function Formation(props) {
     }));
     const classes = useStyles();
     const top100Films = [
-        { title: 'The Shawshank Redemption', year: 1994 },
+        { title: 'Artificial Intelligence', year: 1994 },
         { title: 'The Godfather', year: 1972 },
         { title: 'The Godfather: Part II', year: 1974 },
         { title: 'The Dark Knight', year: 2008 },
@@ -147,6 +147,7 @@ function Formation(props) {
         NbPlaces: '',
         DateDebut: '',
         Prix: '',
+        Description: '',
         others: '',
         Tags: {
             val1: top100Films[13],
@@ -165,6 +166,24 @@ function Formation(props) {
             ...option,
         };
     });
+    function nombre_occurences_tags(texte) {
+        var div = texte.toLowerCase()
+        var obj_dico = {};
+        for (let index of top100Films) {
+            if (div !== "" && div.length > 2) // mots de plus de 3 lettres
+            {
+                var re = new RegExp(index.title.toLocaleLowerCase(), 'g');
+                obj_dico[index.title] = (div.match(re) || []).length;
+
+            }
+
+            // console.log(index.title + obj_dico[index.title]);
+        }
+        // obj_dico.sort()
+        console.log(obj_dico);
+
+        // return obj_dico;
+    }
     const handleInputChange = e => {
         var { name, value } = e.target
         if (e.target === 'DateDebut') {
@@ -179,6 +198,15 @@ function Formation(props) {
                 ...Values,
                 [name]: value
             })
+
+    }
+    const handleDescriptionChange = e => {
+        var { name, value } = e.target
+        setValues({
+            ...Values,
+            [name]: value
+        })
+        nombre_occurences_tags(value);
 
     }
 
@@ -400,6 +428,25 @@ function Formation(props) {
                                 </Grid>
                                 <Grid item xs={7}>
                                     <TextField required label="Prix" name="Prix" value={Values.Prix} className="field" type="number" onChange={handleInputChange} />
+                                </Grid>
+                            </Grid>
+                            <Grid item container justify="space-evenly" >
+                                <Grid item xs={4} >
+                                    <label >Description</label>
+                                </Grid>
+                                <Grid item xs={7}>
+                                    {/* <TextField required label="Prix" name="Prix" value={Values.Prix} className="field" type="number" onChange={handleInputChange} /> */}
+                                    <TextField
+                                        required
+                                        value={Values.Description}
+                                        name="Description"
+                                        id="outlined-multiline-static"
+                                        label="Description"
+                                        multiline
+                                        rows={10}
+                                        style={{ "width": '350px' }}
+                                        onChange={handleDescriptionChange}
+                                    />
                                 </Grid>
                             </Grid>
                             <Grid item container justify="space-evenly" >
