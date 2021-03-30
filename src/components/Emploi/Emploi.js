@@ -17,8 +17,9 @@ import GridList from '@material-ui/core/GridList';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { makeStyles } from '@material-ui/core/styles';
 import EditIcon from '@material-ui/icons/Edit';
-import "../Formations/Formation.css"
-function Emploi(props) {
+import "../Formations/Formation.css";
+
+ function Emploi(props) {
     const useStyles = makeStyles((theme) => ({
         root: {
             flexGrow: 1,
@@ -242,19 +243,6 @@ function Emploi(props) {
 
 
     }, [])
-
-    // useEffect(() => {
-    //     if (CurrentId === '') {
-    //         setValues({
-    //             ...initialFieldValues
-    //         })
-
-    //     } else
-    //         setValues({
-    //             ...Formations[CurrentId]
-    //         })
-    //     // console.log(Formations.Domaine)
-    // }, [CurrentId])
     const OnDelete = id => {
 
         if (window.confirm("etes vous sure de supprimer ce item?")) {
@@ -395,7 +383,6 @@ function Emploi(props) {
                             <Grid item container justify="space-evenly" >
                                 <Grid item xs={4} >
                                     <label >Type de contrat: </label>
-
                                 </Grid>
                                 <Grid item xs={7}>
                                     <FormControl required className={classes.formControl}>
@@ -634,7 +621,7 @@ function Emploi(props) {
 
                     })
                 }
-                {/* </Grid> */}
+               
             </fieldset>
         </div>
     )

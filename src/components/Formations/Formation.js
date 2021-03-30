@@ -150,13 +150,12 @@ function Formation(props) {
         Description: '',
         others: '',
         Tags: {
-            val1: top100Films[13],
-            val2: top100Films[12]
+            // val1: top100Films[13],
+            // val2: top100Films[12]
         }
 
     }
     const [Values, setValues] = useState(initialFieldValues)
-    // var [CurrentId, setCurrentID] = useState('')
 
 
     const options = top100Films.map((option) => {
@@ -166,24 +165,7 @@ function Formation(props) {
             ...option,
         };
     });
-    function nombre_occurences_tags(texte) {
-        var div = texte.toLowerCase()
-        var obj_dico = {};
-        for (let index of top100Films) {
-            if (div !== "" && div.length > 2) // mots de plus de 3 lettres
-            {
-                var re = new RegExp(index.title.toLocaleLowerCase(), 'g');
-                obj_dico[index.title] = (div.match(re) || []).length;
 
-            }
-
-            // console.log(index.title + obj_dico[index.title]);
-        }
-        // obj_dico.sort()
-        console.log(obj_dico);
-
-        // return obj_dico;
-    }
     const handleInputChange = e => {
         var { name, value } = e.target
         if (e.target === 'DateDebut') {
@@ -200,13 +182,58 @@ function Formation(props) {
             })
 
     }
+    function nombre_occurences_tags(texte) {
+        var div = texte.toLowerCase()
+
+        if (div !== "" && div.length > 2) // mots de plus de 3 lettres
+        {
+            var obj_dico = {};
+            for (let index of top100Films) {
+
+                var re = new RegExp(index.title.toLocaleLowerCase(), 'g');
+                obj_dico[index.title] = (div.match(re) || []).length;
+
+            }
+            console.log(Object.keys(obj_dico).length);
+            return obj_dico
+        }
+
+    }
+    function search_index(titre) {
+        for (let index of top100Films) {
+            if (index.title === titre) {
+                return top100Films.indexOf(index);
+
+            }
+
+        }
+    }
     const handleDescriptionChange = e => {
         var { name, value } = e.target
         setValues({
             ...Values,
-            [name]: value
+            [name]: value,
+            
         })
-        nombre_occurences_tags(value);
+        var tab = nombre_occurences_tags(value);
+        if (typeof tab!=='undefined') {
+            if (Object.keys(tab).length !== 0) {
+                console.log(tab)
+                var max = Object.keys(tab).reduce((a, b) => tab[a] > tab[b] ? a : b);
+                console.log(max)
+                console.log(top100Films[search_index(max)])
+                setValues({
+                    ...Values,
+                    [name]: value,
+                   Tags: {
+                    val: top100Films[search_index(max)],
+                    },
+                    
+                })
+            }
+        }
+
+
 
     }
 
@@ -264,19 +291,6 @@ function Formation(props) {
         // console.log(.tags)
 
     }, [])
-
-    // useEffect(() => {
-    // if (CurrentId === '') {
-    //     setValues({
-    //         ...initialFieldValues
-    //     })
-
-    //     // } else    
-    //         setValues({
-    //             ...Formations[CurrentId]
-    //         })
-    //     console.log(Formations.Domaine)
-    // }, [CurrentId])
 
     const [btnValue, setbtnValue] = useState("Postuler")
 
@@ -463,7 +477,6 @@ function Formation(props) {
                                             name="Tags"
                                             options={top100Films}
                                             onChange={onTagsChange}
-                                            // eslint-disable-next-line react/jsx-no-duplicate-props
                                             options={options.sort((a, b) => -b.firstLetter.localeCompare(a.firstLetter))}
                                             groupBy={(option) => option.firstLetter}
                                             getOptionLabel={(option) => option.title}
