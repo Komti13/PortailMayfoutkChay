@@ -11,7 +11,8 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
-import firebaseDb from "../../firebase";
+import firebaseDb from "../../MyFireBase";
+
 import Grid from '@material-ui/core/Grid';
 import GridList from '@material-ui/core/GridList';
 import DeleteIcon from '@material-ui/icons/Delete';
@@ -39,8 +40,8 @@ function Formation(props) {
     const top100Films = [
         { title: 'Artificial Intelligence', year: 1994 },
         { title: 'The Godfather', year: 1972 },
-        { title: 'The Godfather: Part II', year: 1974 },
-        { title: 'The Dark Knight', year: 2008 },
+        { title: 'Formation', year: 1974 },
+        { title: 'training', year: 2008 },
         { title: '12 Angry Men', year: 1957 },
         { title: "Schindler's List", year: 1993 },
         { title: 'Pulp Fiction', year: 1994 },
@@ -112,7 +113,6 @@ function Formation(props) {
         { title: 'Star Wars: Episode VI - Return of the Jedi', year: 1983 },
         { title: 'Reservoir Dogs', year: 1992 },
         { title: 'Braveheart', year: 1995 },
-        { title: 'M', year: 1931 },
         { title: 'Requiem for a Dream', year: 2000 },
         { title: 'Amélie', year: 2001 },
         { title: 'A Clockwork Orange', year: 1971 },
@@ -194,7 +194,6 @@ function Formation(props) {
                 obj_dico[index.title] = (div.match(re) || []).length;
 
             }
-            console.log(Object.keys(obj_dico).length);
             return obj_dico
         }
 
@@ -213,22 +212,49 @@ function Formation(props) {
         setValues({
             ...Values,
             [name]: value,
-            
+
         })
         var tab = nombre_occurences_tags(value);
-        if (typeof tab!=='undefined') {
+        if (typeof tab !== 'undefined') {
             if (Object.keys(tab).length !== 0) {
-                console.log(tab)
-                var max = Object.keys(tab).reduce((a, b) => tab[a] > tab[b] ? a : b);
-                console.log(max)
-                console.log(top100Films[search_index(max)])
+                // console.log(tab)
+                var max = Object.keys(tab).reduce((a, b) => {
+                    if (value.trim() !== '') {
+
+                        if (tab[a] > tab[b]) {
+                            return a;
+                        } else return b;
+
+                    } else return top100Films[2].title;
+                }
+                );
+                var max2 = Object.keys(tab).reduce((a, b) => {
+                    if (value.trim() !== '') {
+                        if (tab[a] > tab[b]) {
+                            if (a === max) {
+                                return b;
+                            }
+                            else
+                                return a;
+                        } else
+                            if (b === max) {
+                                return a;
+                            } else
+                                return b;
+
+                    }
+                    else return top100Films[3].title;
+                });
+                // console.log(max)
+                // console.log(max2)
                 setValues({
                     ...Values,
                     [name]: value,
-                   Tags: {
-                    val: top100Films[search_index(max)],
+                    Tags: {
+                        val: top100Films[search_index(max)],
+                        val1: top100Films[search_index(max2)],
                     },
-                    
+
                 })
             }
         }
@@ -277,6 +303,7 @@ function Formation(props) {
         });
     }
     const [Formations, setFormations] = useState({});
+  
     useEffect(() => {
         firebaseDb.child('Formations').on('value', snapshot => {
             if (snapshot.val() != null) {
@@ -306,7 +333,6 @@ function Formation(props) {
             Nom: Formations[id].Nom,
             Domaine: Formations[id].Domaine,
             Type: Formations[id].Type,
-            // Image: Formations[id].Image,
             Duree: Formations[id].Duree,
             NbPlaces: Formations[id].NbPlaces,
             DateDebut: Formations[id].DateDebut,
